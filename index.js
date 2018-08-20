@@ -146,11 +146,11 @@ io.on("connection",function(socket){
         currentUser.angle = data.angle;
         data.id = data.id.replace("\"","").replace("\"","");
         socket.broadcast.to(data.id).emit("MOVE",currentUser);
-        console.log(currentUser.name + "move to " + currentUser.position);
+        //console.log(currentUser.name + "move to " + currentUser.position);
     })
 
     socket.on("PLAYERFIRE",(data)=>{
-        console.log(data.enemyid);
+       // console.log(data.enemyid);
         var first = data.enemyid.substr(0,1);
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
