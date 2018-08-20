@@ -10,6 +10,10 @@ app.set('port',process.env.PORT || 6969);
 
 var client = [];
 
+app.get("/",()=>{
+    res.send("da ket noi");
+})
+
 app.get('/user',(req,res) =>{
     res.send("aaaa");
     console.log("co nguoi load");
@@ -30,10 +34,37 @@ io.on("connection",function(socket){
     })
     socket.on("AGREE",(data) =>{
        console.log("data truoc " + data);
-        data = data.replace("\"","").replace("\"","");
-        console.log(data + "agree");
-        console.log("type of data " + typeof(data) );
-        socket.broadcast.to(data).emit("OTHERPLAYOK");    
+       var userBusy;
+       
+        if(currentUser !== undefined){
+            for(var i = 0;i < client.length;i++){
+               // var id = JSON.stringify(client[i].id);
+                var id = client[i].id;
+                console.log(typeof(id));
+                console.log("id client: " + id + " id user " + data);
+                if(data == id){
+                    console.log("dung r " + client[i].gaming);
+                   if(client[i].gaming == "true"){
+                       console.log("dung gaming r");
+                       userBusy = true;
+                       i = client.length;
+                   }                  
+                }
+            }
+        }
+
+        if(userBusy){
+            socket.emit("BUSY");
+        }else{
+            socket.emit("NOTBUSY");
+            data = data.replace("\"","").replace("\"","");
+            console.log(data + "agree");
+            console.log("type of data " + typeof(data) );
+            var dataBack  = {
+                id:socket.id
+            }
+            socket.broadcast.to(data).emit("OTHERPLAYOK",dataBack); 
+        }           
     })
 
     socket.on("PLAY",(data) => {     
@@ -88,6 +119,12 @@ io.on("connection",function(socket){
         socket.broadcast.emit("LISTWAITING",{client,length});
     })
 
+    socket.on("REFRESH",(data) => {
+        console.log("rf list");
+        var length = client.length;
+        socket.emit("LISTWAITING",{client,length});
+    })
+
     socket.on("SENDREQUEST",(data) =>{
        console.log("client gui len ne: " + JSON.stringify(data));
        var cup = {
@@ -105,13 +142,9 @@ io.on("connection",function(socket){
     })
 
     socket.on("MOVE",(data) => {
-        console.log("da co toc do: " +data.position);
-        console.log("do quay: " +data.angle);
         currentUser.position = data.position;
         currentUser.angle = data.angle;
-        console.log("id tu move: " + data.id);
         data.id = data.id.replace("\"","").replace("\"","");
-        console.log("id tu move sau: " + data.id);
         socket.broadcast.to(data.id).emit("MOVE",currentUser);
         console.log(currentUser.name + "move to " + currentUser.position);
     })
@@ -119,7 +152,6 @@ io.on("connection",function(socket){
     socket.on("PLAYERFIRE",(data)=>{
         console.log(data.enemyid);
         var first = data.enemyid.substr(0,1);
-        console.log("first la: " + first);
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
