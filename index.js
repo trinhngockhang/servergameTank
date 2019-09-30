@@ -140,8 +140,18 @@ io.on("connection",function(socket){
        var name = cup.name;
        socket.broadcast.to(cup.id).emit("BEFIGHT",cup);
     })
-
+    socket.on("CHANGEVELOCITY", (data) => {
+        console.log("data nhan dc khi thay doi vi tri", data.id);
+        console.log("huong la", data.direction);
+        data.id = data.id.replace("\"","").replace("\"","");
+        var obj ={
+            direction :data.direction
+        }
+        socket.broadcast.to(data.id).emit("OTHERPLAYERCHANGEVELOCITY",obj);
+    })
+    
     socket.on("MOVE",(data) => {
+        // console.log("nhan vi tri ne", data);
         currentUser.position = data.position;
         currentUser.angle = data.angle;
         data.id = data.id.replace("\"","").replace("\"","");
@@ -150,7 +160,7 @@ io.on("connection",function(socket){
     })
 
     socket.on("PLAYERFIRE",(data)=>{
-       // console.log(data.enemyid);
+        console.log(data.enemyid);
         var first = data.enemyid.substr(0,1);
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
