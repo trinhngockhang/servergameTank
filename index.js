@@ -141,8 +141,8 @@ io.on("connection",function(socket){
        socket.broadcast.to(cup.id).emit("BEFIGHT",cup);
     })
     socket.on("CHANGEVELOCITY", (data) => {
-        console.log("data nhan dc khi thay doi vi tri", data.id);
-        console.log("huong la", data.direction);
+        //console.log("data nhan dc khi thay doi vi tri", data.id);
+        // console.log("huong la", data.direction);
         data.id = data.id.replace("\"","").replace("\"","");
         var obj ={
             direction :data.direction
@@ -159,13 +159,13 @@ io.on("connection",function(socket){
         //console.log(currentUser.name + "move to " + currentUser.position);
     })
 
-    socket.on("PLAYERFIRE",(data)=>{
-        console.log(data.enemyid);
+    socket.on("PLAYER_H_PUNCH",(data)=>{
         var first = data.enemyid.substr(0,1);
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
-        socket.broadcast.to(data.enemyid).emit("OTHERPLAYERFIRE");
+        console.log("thanng " + data.enemyid + " vua ban");
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_H_PUNCH");
     })
     socket.on("disconnect",() => {
         socket.broadcast.emit("USER_DISCONNECTED", currentUser);
