@@ -167,6 +167,22 @@ io.on("connection",function(socket){
         console.log("thanng " + data.enemyid + " vua ban");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_H_PUNCH");
     })
+    socket.on("PLAYER_DOWN",(data)=>{
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        console.log("thanng " + data.enemyid + " vua ngoi");
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_DOWN");
+    })
+    socket.on("PLAYER_UP",(data)=>{
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        console.log("thanng " + data.enemyid + " vua dung len");
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_UP");
+    })
     socket.on("disconnect",() => {
         socket.broadcast.emit("USER_DISCONNECTED", currentUser);
         if(currentUser !== undefined){
