@@ -148,14 +148,15 @@ io.on("connection",function(socket){
             direction :data.direction
         }
         socket.broadcast.to(data.id).emit("OTHERPLAYERCHANGEVELOCITY",obj);
+        socket.emit("PERMISMOVE", obj);
     })
     
-    socket.on("MOVE",(data) => {
-        // console.log("nhan vi tri ne", data);
+    socket.on("UPDATEPOSITION",(data) => {
+        console.log("nhan vi tri ne", data);
         currentUser.position = data.position;
         currentUser.angle = data.angle;
         data.id = data.id.replace("\"","").replace("\"","");
-        socket.broadcast.to(data.id).emit("MOVE",currentUser);
+        socket.broadcast.to(data.id).emit("UPDATEPOSITION",currentUser);
         //console.log(currentUser.name + "move to " + currentUser.position);
     })
 
@@ -166,6 +167,17 @@ io.on("connection",function(socket){
         }
         console.log("thanng " + data.enemyid + " vua ban");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_H_PUNCH");
+        socket.emit("PERMIS_H_PUNCH");
+    })
+
+    socket.on("PLAYER_KICK",(data)=>{
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        console.log("thanng " + data.enemyid + " vua ban");
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_KICK");
+        socket.emit("PERMIS_KICK");
     })
     socket.on("PLAYER_DOWN",(data)=>{
         var first = data.enemyid.substr(0,1);
