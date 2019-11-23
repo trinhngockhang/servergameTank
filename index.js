@@ -165,7 +165,7 @@ io.on("connection",function(socket){
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
-        console.log("thanng " + data.enemyid + " vua ban");
+        console.log("thanng " + data.enemyid + " vua dam");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_H_PUNCH");
         socket.emit("PERMIS_H_PUNCH");
     })
@@ -175,16 +175,54 @@ io.on("connection",function(socket){
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
-        console.log("thanng " + data.enemyid + " vua ban");
+        console.log("thanng " + data.enemyid + " vua da");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_KICK");
         socket.emit("PERMIS_KICK");
     })
+
+    socket.on("PLAYER_ATTACK",(data)=>{
+        console.log("Nhan action danh");
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_ATTACK");
+        socket.emit("PERMIS_ATTACK");
+    })
+
+    socket.on("PLAYER_JUMP",(data)=>{
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_JUMP");
+        socket.emit("PERMIS_JUMP");
+    })
+
+    socket.on("PLAYER_BLOCK",(data)=>{
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_BLOCK");
+        socket.emit("PERMIS_BLOCK");
+    })
+
+    socket.on("PLAYER_IDLE",(data)=>{
+        var first = data.enemyid.substr(0,1);
+        if(first == "\""){
+            data.enemyid = data.enemyid.replace("\"","").replace("\"","");
+        }
+        socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_IDLE");
+        socket.emit("PERMIS_IDLE");
+    })
+    
     socket.on("PLAYER_DOWN",(data)=>{
         var first = data.enemyid.substr(0,1);
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
-        console.log("thanng " + data.enemyid + " vua ngoi");
+        //console.log("thanng " + data.enemyid + " vua ngoi");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_DOWN");
     })
     socket.on("PLAYER_UP",(data)=>{
@@ -192,7 +230,7 @@ io.on("connection",function(socket){
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
-        console.log("thanng " + data.enemyid + " vua dung len");
+        //console.log("thanng " + data.enemyid + " vua dung len");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_UP");
     })
     socket.on("disconnect",() => {
