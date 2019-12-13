@@ -44,7 +44,7 @@ io.on("connection",function(socket){
                 console.log("id client: " + id + " id user " + data);
                 if(data == id){
                     console.log("dung r " + client[i].gaming);
-                   if(client[i].gaming == "true"){
+                   if(client[i].gaming == "3"){
                        console.log("dung gaming r");
                        userBusy = true;
                        i = client.length;
@@ -87,11 +87,53 @@ io.on("connection",function(socket){
         console.log("id enemy sau: " +currentUser.idEnemy);
         socket.broadcast.to(currentUser.idEnemy).emit("USER_CONNECTED",currentUser);     
     })
-
+    socket.on("CHARACTER_SELECT", (data) => {
+        socket.emit("CHARACTER_SELECT",currentUser);    
+    })
+    socket.on("WAITING", (data) => {
+        console.log({data});
+        var gaming = data.gaming;
+        var character = data.character;
+        if(currentUser !== undefined){
+            for(var i = 0;i < client.length;i++){
+                if(socket.id === client[i].id){
+                    client[i].gaming = gaming;
+                    client[i].character = character;
+                    console.log("User " + client[i].name + " dang " + gaming + "character:" + character);                   
+                }
+            }
+        }
+        var enemyId = data.id.replace("\"","").replace("\"","");
+        console.log('id player 2', enemyId);
+        var myPlayer = {
+            character: character
+        };
+        var enemyPlayer = {
+            character: "1"
+        };
+        if(currentUser !== undefined){
+            for(var i = 0;i < client.length;i++){
+               // var id = JSON.stringify(client[i].id);
+                var id = client[i].id;
+                if(enemyId.toString() == id.toString()){
+                    console.log("dung r " + client[i].gaming);
+                   if(client[i].gaming == "2"){
+                       console.log("thang kia xong r");
+                       enemyPlayer.character = client[i].character;
+                       console.log({enemyPlayer});
+                       console.log({myPlayer});
+                       socket.emit("PLAY");
+                       socket.broadcast.to(enemyId).emit("PLAY");
+                       socket.emit("USER_CONNECTED", enemyPlayer);
+                       socket.broadcast.to(enemyId).emit("USER_CONNECTED",myPlayer); 
+                   }                  
+                }
+            }
+        }
+    })
     socket.on("CHANGESTATUS",(data) => {
         var gaming = data.gaming;
         console.log("da vao game chua????" + typeof(gaming) );
-        
         if(currentUser !== undefined){
             for(var i = 0;i < client.length;i++){
                 if(socket.id === client[i].id){
