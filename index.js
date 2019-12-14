@@ -44,7 +44,7 @@ io.on("connection",function(socket){
                 console.log("id client: " + id + " id user " + data);
                 if(data == id){
                     console.log("dung r " + client[i].gaming);
-                   if(client[i].gaming == "3"){
+                   if(client[i].gaming == "3" || client[i].gaming == "2"){
                        console.log("dung gaming r");
                        userBusy = true;
                        i = client.length;
@@ -119,7 +119,7 @@ io.on("connection",function(socket){
                     console.log("dung r " + client[i].gaming);
                    if(client[i].gaming == "2"){
                        console.log("thang kia xong r");
-                       enemyPlayer.character = client[i].character;
+                       enemyPlayer.character = client[i].character.replace("\'","").replace("\'","");
                        console.log({enemyPlayer});
                        console.log({myPlayer});
                        socket.emit("PLAY");
