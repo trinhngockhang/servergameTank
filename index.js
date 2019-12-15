@@ -94,17 +94,6 @@ io.on("connection",function(socket){
         console.log({data});
         var gaming = data.gaming;
         var character = data.character;
-        if(currentUser !== undefined){
-            for(var i = 0;i < client.length;i++){
-                if(socket.id === client[i].id){
-                    client[i].gaming = gaming;
-                    client[i].character = character;
-                    console.log("User " + client[i].name + " dang " + gaming + "character:" + character);                   
-                }
-            }
-        }
-        var enemyId = data.id.replace("\"","").replace("\"","");
-        console.log('id player 2', enemyId);
         var myPlayer = {
             character: character
         };
@@ -113,12 +102,26 @@ io.on("connection",function(socket){
         };
         if(currentUser !== undefined){
             for(var i = 0;i < client.length;i++){
+                if(socket.id === client[i].id){
+                    client[i].gaming = gaming;
+                    client[i].character = character;
+                    myPlayer.name = client[i].name;
+                    console.log("User " + client[i].name + " dang " + gaming + "character:" + character);                   
+                }
+            }
+        }
+        var enemyId = data.id.replace("\"","").replace("\"","");
+        console.log('id player 2', enemyId);
+        
+        if(currentUser !== undefined){
+            for(var i = 0;i < client.length;i++){
                // var id = JSON.stringify(client[i].id);
                 var id = client[i].id;
                 if(enemyId.toString() == id.toString()){
                     console.log("dung r " + client[i].gaming);
                    if(client[i].gaming == "2"){
                        console.log("thang kia xong r");
+                       enemyPlayer.name = client[i].name;
                        enemyPlayer.character = client[i].character.replace("\'","").replace("\'","");
                        console.log({enemyPlayer});
                        console.log({myPlayer});
@@ -137,7 +140,7 @@ io.on("connection",function(socket){
         if(currentUser !== undefined){
             for(var i = 0;i < client.length;i++){
                 if(socket.id === client[i].id){
-                    client[i].gaming = gaming;
+                    client[i].gaming = "3";
                     console.log("User " + client[i].name + " dang " + gaming);                   
                 }
             }
