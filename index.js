@@ -277,6 +277,7 @@ io.on("connection",function(socket){
         }
         //console.log("thanng " + data.enemyid + " vua dung len");
         socket.broadcast.to(data.enemyid).emit("OTHERPLAYER_UP");
+        socket.emit("PERMIS_UP");
     })
     socket.on("disconnect",() => {
         socket.broadcast.emit("USER_DISCONNECTED", currentUser);
