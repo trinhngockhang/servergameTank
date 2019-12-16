@@ -140,7 +140,7 @@ io.on("connection",function(socket){
         if(currentUser !== undefined){
             for(var i = 0;i < client.length;i++){
                 if(socket.id === client[i].id){
-                    client[i].gaming = "3";
+                    client[i].gaming = gaming;
                     console.log("User " + client[i].name + " dang " + gaming);                   
                 }
             }
@@ -237,6 +237,7 @@ io.on("connection",function(socket){
 
     socket.on("PLAYER_JUMP",(data)=>{
         var first = data.enemyid.substr(0,1);
+        console.log("yeu cau nhay len");
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
@@ -272,6 +273,7 @@ io.on("connection",function(socket){
     })
     socket.on("PLAYER_UP",(data)=>{
         var first = data.enemyid.substr(0,1);
+        console.log("no dang yc dung day");
         if(first == "\""){
             data.enemyid = data.enemyid.replace("\"","").replace("\"","");
         }
